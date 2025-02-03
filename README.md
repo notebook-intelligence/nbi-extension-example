@@ -1,2 +1,6 @@
 # nbi-extension-example
 Notebook Intelligence extension example
+
+```bash
+pip install -e "."
+```

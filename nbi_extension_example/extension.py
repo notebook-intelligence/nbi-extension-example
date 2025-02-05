@@ -57,6 +57,9 @@ class ExampleChatParticipant(ChatParticipant):
             response.stream(ProgressData("Running..."))
             sleep(2)
 
+            response.stream(MarkdownData("""Here is a Python method I generated. \n```python\ndef show_message():\n  print('Hello world!')\n```\n"""))
+            sleep(1)
+
             response.stream(ButtonData("Button title", "apputils:notify", {
                 "message": 'Copilot chat button was clicked',
                 "type": 'success',

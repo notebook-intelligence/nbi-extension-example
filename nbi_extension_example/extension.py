@@ -3,7 +3,9 @@
 from time import sleep
 import logging
 import uuid
-from notebook_intelligence import AnchorData, ButtonData, ChatCommand, HTMLFrameData, MarkdownData, NotebookIntelligenceExtension, Host, ChatParticipant, ChatRequest, ChatResponse, ProgressData, ConfirmationData
+from notebook_intelligence import ImageData, AnchorData, ButtonData, ChatCommand, HTMLFrameData, MarkdownData, NotebookIntelligenceExtension, Host, ChatParticipant, ChatRequest, ChatResponse, ProgressData, ConfirmationData
+
+from .toolsets import MathToolset, WeatherToolset
 
 from .util import PARTICIPANT_ICON_URL, example_matplotlib_image
 
@@ -71,11 +73,7 @@ class ExampleChatParticipant(ChatParticipant):
             response.stream(ProgressData("Generating a matplotlib chart..."))
             sleep(2)
             response.stream(MarkdownData("**Matplotlib chart**"))
-            response.stream(HTMLFrameData(f"""
-                <div>
-                <img style="width: 100%" src="data:image/png;base64,{example_matplotlib_image()}" />
-                </div>
-                """, height=400))
+            response.stream(ImageData(f"data:image/png;base64,{example_matplotlib_image()}"))
             
             response.stream(ProgressData("Generating a map..."))
             sleep(2)
@@ -123,4 +121,6 @@ class ExampleExtension(NotebookIntelligenceExtension):
     def activate(self, host: Host) -> None:
         self.participant = ExampleChatParticipant(host)
         host.register_chat_participant(self.participant)
+        host.register_toolset(WeatherToolset(self))
+        host.register_toolset(MathToolset(self))
         log.info("Example extension activated")
